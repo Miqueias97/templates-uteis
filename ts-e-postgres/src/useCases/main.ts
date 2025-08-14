@@ -3,7 +3,6 @@ import sheetsApi from "../drivers/sheetsApi";
 import {
   ApiResponse,
   DeviceResponse,
-  Order,
   OrderResponse,
 } from "../types/dataResponse";
 import queryExecute from "../drivers/postgres";
@@ -11,8 +10,8 @@ import queryExecute from "../drivers/postgres";
 dotenv.config();
 
 // request api
-const get_devices = async () => {
-  const items = {};
+const get_devices = async (): Promise<Record<string, string>> => {
+  const items: Record<string, string> = {};
   const data = await sheetsApi.get<ApiResponse<DeviceResponse>>(
     `/${process.env.SHEET_ID}&page=1&perPage=547&aba=1866250139`
   );
@@ -33,8 +32,8 @@ const get_devices = async () => {
   return items;
 };
 
-const get_orders = async () => {
-  const items = {};
+const get_orders = async (): Promise<Record<string, string>> => {
+  const items: Record<string, string> = {};
   const data = await sheetsApi.get<ApiResponse<OrderResponse>>(
     `/${process.env.SHEET_ID}&page=1&perPage=97&aba=0`
   );
@@ -75,11 +74,15 @@ const order_insert_mock = (item: OrderResponse) => {
         local_da_os, motivo_no_show
     ) VALUES (
       '${item.TICKETID}', '${
-    new Date(item.DATA_SERVICO).toISOString().split("T")[0]
+    item.DATA_SERVICO
+      ? new Date(item.DATA_SERVICO).toISOString().split("T")[0]
+      : ""
   }',
-      '${new Date(item.DATA_INCLUSAO).toISOString().split("T")[0]}', '${
-    item.CLASSIFICACAO
-  }',
+      '${
+        item.DATA_INCLUSAO
+          ? new Date(item.DATA_INCLUSAO).toISOString().split("T")[0]
+          : ""
+      }', '${item.CLASSIFICACAO}',
       '${item.CLIENTE}', '${item.STATUS}',
       '${item.PRESTADOR}', '${item.FINALIZADOR}',
       '${item.ENDERECO}', '${item.NO_SHOW}'
@@ -124,7 +127,11 @@ const main = async () => {
     `;
   });
 
-  //queryExecute(query_insert).then((i) => console.log(`OK ${i}`));
+  queryExecute(query_insert)
+    .then((i) => console.log(`Insert realizado com sucesso`))
+    .catch((err) => {
+      console.error(`Erro ao realizar insert: ${err}`);
+    });
 };
 
 main();

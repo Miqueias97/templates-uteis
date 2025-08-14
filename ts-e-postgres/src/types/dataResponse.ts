@@ -38,7 +38,3 @@ export interface OrderResponse {
   PRESTADOR: string | null;
   FINALIZADOR: string | null;
 }
-
-export interface Order {
-  ordem_de_servico: string;
-}
