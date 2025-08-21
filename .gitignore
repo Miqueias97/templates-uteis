@@ -1,4 +1,4 @@
 .env
 venv
 integracao-389616-921d0ca9c26c.json
-.csv
+*.csv
