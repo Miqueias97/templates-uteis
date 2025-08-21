@@ -11,7 +11,7 @@ class SheetsToJSON:
         self.get_data()
 
     def get_data(self):
-        df = pd.read_csv('sheets-to-json/01. COMPILADO 2025 - Serviços.csv')
+        df = pd.read_csv('01. COMPILADO 2025 - Serviços.csv')
         df = df.replace({np.nan: None})
         items = list()
         for index, i in enumerate(df.itertuples(False)):
@@ -57,12 +57,11 @@ class SheetsToJSON:
             return None
 
     def make_to_json(self, data: list, linha_atual):
-        print(type(data[3]), data[3])
         dataServico = self.try_parse_date(data[3])
         dataInclusao = self.try_parse_date(data[4])
 
         valorTotal      = self.try_parse_float(data[33])
-        custoAdicional  = self.try_parse_float(data[34])
+        custoAdicional  = self.try_parse_float(data[31])
         deslocamento    = self.try_parse_float(data[30])
         deslocamento_km = self.try_parse_float(data[23])
         franquia        = self.try_parse_float(data[26])
